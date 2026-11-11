@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a bug, a crash or request a feature
+    url: https://github.com/avie293/avie-issues/issues/new/choose
+    about: All issues for Avie's projects are tracked in one central repository.
+  - name: Homepage
+    url: https://avie.cc/
+    about: More projects and information.

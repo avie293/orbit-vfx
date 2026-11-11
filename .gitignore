@@ -1,0 +1,39 @@
+# Gradle
+.gradle/
+build/
+out/
+classes/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Minecraft run directories
+run/
+runs/
+**/src/generated/**/.cache/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+.run/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+bin/
+*.launch
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
