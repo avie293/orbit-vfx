@@ -42,32 +42,38 @@ public final class FireEffects {
         }
 
         Block block = state.getBlock();
+        // Each block only gets a display tick every second or so, hence several embers per tick.
         if (block instanceof TorchBlock) {
-            if (random.nextInt(3) == 0) {
+            int count = 1 + random.nextInt(2);
+            for (int i = 0; i < count; i++) {
                 torchEmber(level, pos, state, random);
             }
         } else if (block instanceof BaseFireBlock) {
-            int count = 1 + random.nextInt(3);
+            int count = 4 + random.nextInt(4);
             for (int i = 0; i < count; i++) {
                 spawn(level, pos.getX() + random.nextDouble(), pos.getY() + 0.1 + random.nextDouble() * 0.6,
                     pos.getZ() + random.nextDouble(), 0.05, random, block == Blocks.SOUL_FIRE);
             }
         } else if (block instanceof CampfireBlock && state.getValue(CampfireBlock.LIT)) {
-            if (random.nextBoolean()) {
+            int count = 3 + random.nextInt(3);
+            for (int i = 0; i < count; i++) {
                 spawn(level, pos.getX() + 0.3 + random.nextDouble() * 0.4, pos.getY() + 0.5,
                     pos.getZ() + 0.3 + random.nextDouble() * 0.4, 0.08, random, block == Blocks.SOUL_CAMPFIRE);
             }
-        } else if (fluid.is(FluidTags.LAVA) && random.nextInt(6) == 0 && level.getBlockState(pos.above()).isAir()) {
-            spawn(level, pos.getX() + random.nextDouble(), pos.getY() + fluid.getOwnHeight(),
-                pos.getZ() + random.nextDouble(), 0.06, random, false);
+        } else if (fluid.is(FluidTags.LAVA) && random.nextInt(3) == 0 && level.getBlockState(pos.above()).isAir()) {
+            int count = 1 + random.nextInt(2);
+            for (int i = 0; i < count; i++) {
+                spawn(level, pos.getX() + random.nextDouble(), pos.getY() + fluid.getOwnHeight(),
+                    pos.getZ() + random.nextDouble(), 0.06, random, false);
+            }
         }
     }
 
     private static void torchEmber(ClientLevel level, BlockPos pos, BlockState state, RandomSource random) {
         // Same flame position as the vanilla torch particles.
-        double x = pos.getX() + 0.5;
+        double x = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.08;
         double y = pos.getY() + 0.7;
-        double z = pos.getZ() + 0.5;
+        double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.08;
         if (state.getBlock() instanceof WallTorchBlock) {
             Direction opposite = state.getValue(WallTorchBlock.FACING).getOpposite();
             x += 0.27 * opposite.getStepX();

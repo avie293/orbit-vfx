@@ -25,8 +25,8 @@ public final class EmberParticle extends SingleQuadParticle {
         this.zd = zd;
         this.palette = soul ? SOUL : FIRE;
         this.wobblePhase = this.random.nextFloat() * Mth.TWO_PI;
-        this.quadSize = 0.022F + this.random.nextFloat() * 0.018F;
-        this.lifetime = 22 + this.random.nextInt(26);
+        this.quadSize = 0.05F + this.random.nextFloat() * 0.035F;
+        this.lifetime = 30 + this.random.nextInt(35);
         this.friction = 0.96F;
         // Negative gravity: the hot air keeps lifting the spark until it has cooled down.
         this.gravity = -0.06F;
@@ -48,6 +48,13 @@ public final class EmberParticle extends SingleQuadParticle {
         float[] p = this.palette;
         this.setColor(Mth.lerp(cooling, p[0], p[3]), Mth.lerp(cooling, p[1], p[4]), Mth.lerp(cooling, p[2], p[5]));
         this.setAlpha(age > 0.7F ? 1.0F - (age - 0.7F) / 0.3F : 1.0F);
+    }
+
+    @Override
+    public float getQuadSize(float a) {
+        // Shrinks to half its size while it cools down.
+        float age = (this.age + a) / this.lifetime;
+        return this.quadSize * (1.0F - age * 0.5F);
     }
 
     @Override
