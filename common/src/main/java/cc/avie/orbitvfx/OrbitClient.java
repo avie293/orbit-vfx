@@ -1,6 +1,8 @@
 package cc.avie.orbitvfx;
 
+import cc.avie.orbitvfx.compat.ShaderPackCompat;
 import cc.avie.orbitvfx.config.OrbitConfig;
+import net.minecraft.client.Minecraft;
 
 /**
  * Loader independent client setup, called from the loader entrypoints.
@@ -11,5 +13,9 @@ public final class OrbitClient {
 
     public static void init(String modId) {
         OrbitConfig.init(modId);
+    }
+
+    public static void tick(Minecraft client) {
+        ShaderPackCompat.tick();
     }
 }
