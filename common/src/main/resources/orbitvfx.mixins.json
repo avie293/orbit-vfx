@@ -4,7 +4,9 @@
   "package": "cc.avie.orbitvfx.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [],
-  "client": [],
+  "client": [
+    "LevelRendererMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

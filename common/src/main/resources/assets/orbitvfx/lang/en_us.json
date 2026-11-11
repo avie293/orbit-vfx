@@ -1,6 +1,13 @@
 {
   "avie.discord": "Discord",
   "config.orbitvfx.category.general": "General",
+  "config.orbitvfx.category.atmosphere": "Atmosphere",
+  "config.orbitvfx.section.groundFog": "Ground Fog",
   "config.orbitvfx.enabled": "Enable Orbit",
-  "config.orbitvfx.enabled.tooltip": "Turns all Orbit effects on or off."
+  "config.orbitvfx.enabled.tooltip": "Turns all Orbit effects on or off.",
+  "config.orbitvfx.groundFog": "Ground fog",
+  "config.orbitvfx.groundFog.tooltip": "Low mist that settles in valleys, forests and swamps. Strongest around sunrise and in rain. Paused while a shader pack is active.",
+  "config.orbitvfx.groundFogDensity": "Density",
+  "config.orbitvfx.lightScattering": "Light scattering",
+  "config.orbitvfx.lightScattering.tooltip": "The mist glows in the color of the sky when looking towards the sun."
 }
