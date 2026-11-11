@@ -3,6 +3,7 @@ package cc.avie.orbitvfx;
 import cc.avie.orbitvfx.compat.ShaderPackCompat;
 import cc.avie.orbitvfx.config.OrbitConfig;
 import cc.avie.orbitvfx.particle.WaterEffects;
+import cc.avie.orbitvfx.particle.Waterfalls;
 import cc.avie.orbitvfx.render.AtmosphereRenderer;
 import cc.avie.orbitvfx.render.BlockAnimations;
 import net.minecraft.client.Minecraft;
@@ -23,5 +24,6 @@ public final class OrbitClient {
         AtmosphereRenderer.tick(client);
         BlockAnimations.tick(client);
         WaterEffects.tick(client);
+        Waterfalls.tick(client);
     }
 }
