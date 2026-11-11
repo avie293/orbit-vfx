@@ -29,6 +29,8 @@ public final class OrbitConfig {
         .dependsOn(ENABLED);
     public static final BooleanOption WATERFALLS = Options.toggle("waterfalls", true)
         .dependsOn(ENABLED);
+    public static final BooleanOption GLOWING_PLANKTON = Options.toggle("glowingPlankton", true)
+        .dependsOn(ENABLED);
 
     public static final BooleanOption PLACE_ANIMATION = Options.toggle("placeAnimation", true)
         .dependsOn(ENABLED);
@@ -48,6 +50,7 @@ public final class OrbitConfig {
     public static boolean rainRipples;
     public static boolean splashes;
     public static boolean waterfalls;
+    public static boolean glowingPlankton;
     public static boolean placeAnimation;
     public static boolean breakAnimation;
     public static float animationSpeed;
@@ -66,7 +69,7 @@ public final class OrbitConfig {
                 .section("groundFog", section -> section.add(GROUND_FOG, GROUND_FOG_DENSITY, LIGHT_SCATTERING)))
             .category("effects", category -> category
                 .section("fire", section -> section.add(EMBERS))
-                .section("water", section -> section.add(RAIN_RIPPLES, SPLASHES, WATERFALLS)))
+                .section("water", section -> section.add(RAIN_RIPPLES, SPLASHES, WATERFALLS, GLOWING_PLANKTON)))
             .category("animations", category -> category.add(PLACE_ANIMATION, BREAK_ANIMATION, ANIMATION_SPEED))
             .build();
         apply();
@@ -85,6 +88,7 @@ public final class OrbitConfig {
         rainRipples = RAIN_RIPPLES.get();
         splashes = SPLASHES.get();
         waterfalls = WATERFALLS.get();
+        glowingPlankton = GLOWING_PLANKTON.get();
         placeAnimation = PLACE_ANIMATION.get();
         breakAnimation = BREAK_ANIMATION.get();
         animationSpeed = ANIMATION_SPEED.get().floatValue();

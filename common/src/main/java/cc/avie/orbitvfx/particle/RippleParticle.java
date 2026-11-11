@@ -5,6 +5,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import org.joml.Quaternionf;
 
@@ -18,6 +19,7 @@ public final class RippleParticle extends SingleQuadParticle {
     private final TextureAtlasSprite[] frames;
     private final float maxSize;
     private final float startAlpha;
+    private boolean glowing;
 
     public RippleParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite[] frames, float maxSize,
             int lifetime, float alpha) {
@@ -31,6 +33,20 @@ public final class RippleParticle extends SingleQuadParticle {
         this.quadSize = maxSize * 0.2F;
         this.setColor(0.85F, 0.92F, 1.0F);
         this.setAlpha(alpha);
+    }
+
+    /**
+     * Makes the ring glow like the plankton in warm oceans at night.
+     */
+    public RippleParticle glow() {
+        this.glowing = true;
+        this.setColor(WaterEffects.PLANKTON_R, WaterEffects.PLANKTON_G, WaterEffects.PLANKTON_B);
+        return this;
+    }
+
+    @Override
+    public int getLightCoords(float a) {
+        return this.glowing ? LightCoordsUtil.FULL_BRIGHT : super.getLightCoords(a);
     }
 
     @Override

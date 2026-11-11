@@ -4,12 +4,14 @@ import cc.avie.orbitvfx.config.OrbitConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ParticleStatus;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
@@ -18,6 +20,10 @@ import net.minecraft.world.phys.Vec3;
  * Rain ripples on open water and splashes when something falls into water.
  */
 public final class WaterEffects {
+    static final float PLANKTON_R = 0.3F;
+    static final float PLANKTON_G = 0.85F;
+    static final float PLANKTON_B = 1.0F;
+
     private static final SpriteSet RIPPLE = new SpriteSet("bubble_pop_0", "bubble_pop_1", "bubble_pop_2",
         "bubble_pop_3", "bubble_pop_4");
     private static final SpriteSet DROPLET = new SpriteSet("splash_0", "splash_1", "splash_2", "splash_3");
@@ -54,7 +60,7 @@ public final class WaterEffects {
             }
             double y = SAMPLE_POS.getY() + fluid.getHeight(level, SAMPLE_POS) + 0.01;
             spawnRipple(level, x + RANDOM.nextDouble(), y, z + RANDOM.nextDouble(), 0.25F + RANDOM.nextFloat() * 0.2F,
-                8 + RANDOM.nextInt(5), 0.55F);
+                8 + RANDOM.nextInt(5), 0.55F, isPlanktonGlowing(level, SAMPLE_POS));
         }
     }
 
@@ -81,11 +87,12 @@ public final class WaterEffects {
         double surface = fluid.is(FluidTags.WATER)
             ? SAMPLE_POS.getY() + fluid.getHeight(level, SAMPLE_POS) + 0.02
             : SAMPLE_POS.getY() + 1.02;
+        boolean glow = isPlanktonGlowing(level, SAMPLE_POS);
 
         // Two rings that widen at different rates read as one wave front followed by a smaller one.
         float size = 1.0F + width * 1.5F + impact * 2.5F;
-        spawnRipple(level, x, surface, z, size, 14 + (int) (impact * 12.0F), 0.8F);
-        spawnRipple(level, x, surface, z, size * 0.6F, 20 + (int) (impact * 12.0F), 0.6F);
+        spawnRipple(level, x, surface, z, size, 14 + (int) (impact * 12.0F), 0.8F, glow);
+        spawnRipple(level, x, surface, z, size * 0.6F, 20 + (int) (impact * 12.0F), 0.6F, glow);
 
         // A crown of drops thrown outwards from the edge of the entity.
         int crown = (int) ((6.0F + width * 12.0F + impact * 40.0F) * factor);
@@ -95,7 +102,7 @@ public final class WaterEffects {
             double outwards = 0.04 + RANDOM.nextDouble() * (0.06 + impact * 0.12);
             double up = 0.08 + RANDOM.nextDouble() * (0.1 + impact * 0.3);
             spawnDroplet(level, x + Mth.cos(angle) * radius, surface, z + Mth.sin(angle) * radius,
-                Mth.cos(angle) * outwards, up, Mth.sin(angle) * outwards);
+                Mth.cos(angle) * outwards, up, Mth.sin(angle) * outwards, glow);
         }
 
         // Hard landings also throw up a narrow column in the middle.
@@ -105,20 +112,34 @@ public final class WaterEffects {
                 double spread = width * 0.25;
                 spawnDroplet(level, x + (RANDOM.nextDouble() - 0.5) * spread, surface,
                     z + (RANDOM.nextDouble() - 0.5) * spread, (RANDOM.nextDouble() - 0.5) * 0.04,
-                    0.25 + RANDOM.nextDouble() * impact * 0.45, (RANDOM.nextDouble() - 0.5) * 0.04);
+                    0.25 + RANDOM.nextDouble() * impact * 0.45, (RANDOM.nextDouble() - 0.5) * 0.04, glow);
             }
         }
     }
 
-    static void spawnRipple(ClientLevel level, double x, double y, double z, float size, int lifetime, float alpha) {
-        Minecraft.getInstance().particleEngine.add(new RippleParticle(level, x, y, z, RIPPLE.all(), size, lifetime,
-            alpha));
+    static void spawnRipple(ClientLevel level, double x, double y, double z, float size, int lifetime, float alpha,
+            boolean glow) {
+        RippleParticle ripple = new RippleParticle(level, x, y, z, RIPPLE.all(), size, lifetime, alpha);
+        Minecraft.getInstance().particleEngine.add(glow ? ripple.glow() : ripple);
     }
 
-    static void spawnDroplet(ClientLevel level, double x, double y, double z, double xd, double yd, double zd) {
+    static void spawnDroplet(ClientLevel level, double x, double y, double z, double xd, double yd, double zd,
+            boolean glow) {
         // Only some drops leave a ring when they land, otherwise a big splash would turn into a carpet of rings.
-        Minecraft.getInstance().particleEngine.add(new DropletParticle(level, x, y, z, xd, yd, zd,
-            DROPLET.random(RANDOM), RANDOM.nextInt(4) == 0));
+        DropletParticle droplet = new DropletParticle(level, x, y, z, xd, yd, zd, DROPLET.random(RANDOM),
+            RANDOM.nextInt(4) == 0);
+        Minecraft.getInstance().particleEngine.add(glow ? droplet.glow() : droplet);
+    }
+
+    /**
+     * Warm oceans light up when they are disturbed at night, as if full of bioluminescent plankton.
+     */
+    static boolean isPlanktonGlowing(ClientLevel level, BlockPos pos) {
+        return OrbitConfig.glowingPlankton && level.isDarkOutside() && isWarmOcean(level.getBiome(pos));
+    }
+
+    static boolean isWarmOcean(Holder<Biome> biome) {
+        return biome.is(Biomes.WARM_OCEAN) || biome.is(Biomes.LUKEWARM_OCEAN) || biome.is(Biomes.DEEP_LUKEWARM_OCEAN);
     }
 
     static float particleFactor(Minecraft client) {

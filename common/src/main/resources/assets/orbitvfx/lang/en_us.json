@@ -21,6 +21,8 @@
   "config.orbitvfx.splashes.tooltip": "Players, mobs and items that fall into water send out waves and a crown of droplets.",
   "config.orbitvfx.waterfalls": "Waterfalls",
   "config.orbitvfx.waterfalls.tooltip": "Spray, drops and mist where falling water hits water. Taller waterfalls spray more.",
+  "config.orbitvfx.glowingPlankton": "Glowing plankton",
+  "config.orbitvfx.glowingPlankton.tooltip": "At night, splashes, ripples and waterfall spray glow blue in warm oceans.",
   "config.orbitvfx.category.animations": "Animations",
   "config.orbitvfx.placeAnimation": "Place animation",
   "config.orbitvfx.placeAnimation.tooltip": "Placed blocks grow out of the surface they are placed on with a small bounce. Not available with Sodium yet.",

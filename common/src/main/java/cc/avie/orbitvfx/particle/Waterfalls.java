@@ -43,6 +43,7 @@ public final class Waterfalls {
 
     private static final long[] LANDINGS = new long[MAX_WATERFALLS];
     private static final int[] HEIGHTS = new int[MAX_WATERFALLS];
+    private static final boolean[] WARM_OCEAN = new boolean[MAX_WATERFALLS];
     private static final BlockPos.MutableBlockPos POS = new BlockPos.MutableBlockPos();
     private static final RandomSource RANDOM = RandomSource.create();
 
@@ -133,6 +134,7 @@ public final class Waterfalls {
         }
         LANDINGS[count] = landing;
         HEIGHTS[count] = height;
+        WARM_OCEAN[count] = WaterEffects.isWarmOcean(level.getBiome(POS.set(landing)));
         count++;
     }
 
@@ -147,6 +149,7 @@ public final class Waterfalls {
                 count--;
                 LANDINGS[i] = LANDINGS[count];
                 HEIGHTS[i] = HEIGHTS[count];
+                WARM_OCEAN[i] = WARM_OCEAN[count];
                 continue;
             }
             if (distanceSqr > EMIT_DISTANCE_SQR || distanceSqr > NEAR_DISTANCE_SQR && (ticks & 1) == 0) {
@@ -154,7 +157,8 @@ public final class Waterfalls {
             }
             FluidState fluid = level.getFluidState(POS);
             double surface = POS.getY() + fluid.getHeight(level, POS);
-            emitAt(level, x, surface, z, Math.min(1.0F, HEIGHTS[i] / 8.0F), factor);
+            boolean glow = WARM_OCEAN[i] && OrbitConfig.glowingPlankton && level.isDarkOutside();
+            emitAt(level, x, surface, z, Math.min(1.0F, HEIGHTS[i] / 8.0F), factor, glow);
         }
     }
 
@@ -167,32 +171,36 @@ public final class Waterfalls {
         return falling;
     }
 
-    private static void emitAt(ClientLevel level, double x, double surface, double z, float strength, float factor) {
-        Minecraft client = Minecraft.getInstance();
+    private static void emitAt(ClientLevel level, double x, double surface, double z, float strength, float factor,
+            boolean glow) {
         int puffs = Math.round((1.0F + strength * 2.0F) * factor);
         for (int i = 0; i < puffs; i++) {
             float angle = RANDOM.nextFloat() * Mth.TWO_PI;
             double outwards = 0.02 + RANDOM.nextDouble() * 0.05 * (0.5 + strength);
-            client.particleEngine.add(new CascadeParticle(level,
+            add(new CascadeParticle(level,
                 x + Mth.cos(angle) * 0.4, surface + 0.05, z + Mth.sin(angle) * 0.4,
                 Mth.cos(angle) * outwards, 0.02 + RANDOM.nextDouble() * 0.04, Mth.sin(angle) * outwards,
-                SPRAY.random(RANDOM), 0.4F, 1.1F + strength, 0.55F, 18 + RANDOM.nextInt(14)));
+                SPRAY.random(RANDOM), 0.4F, 1.1F + strength, 0.55F, 18 + RANDOM.nextInt(14)), glow);
         }
         if (RANDOM.nextFloat() < 0.5F * factor) {
             float angle = RANDOM.nextFloat() * Mth.TWO_PI;
             double outwards = 0.03 + RANDOM.nextDouble() * 0.06;
             double up = 0.1 + RANDOM.nextDouble() * 0.2 * (0.5 + strength);
             WaterEffects.spawnDroplet(level, x + Mth.cos(angle) * 0.3, surface, z + Mth.sin(angle) * 0.3,
-                Mth.cos(angle) * outwards, up, Mth.sin(angle) * outwards);
+                Mth.cos(angle) * outwards, up, Mth.sin(angle) * outwards, glow);
         }
         // Slow, faint mist that drifts away from bigger waterfalls.
         if (RANDOM.nextFloat() < 0.08F * factor * (0.5F + strength)) {
-            client.particleEngine.add(new CascadeParticle(level,
+            add(new CascadeParticle(level,
                 x + (RANDOM.nextDouble() - 0.5) * 1.5, surface + 0.3, z + (RANDOM.nextDouble() - 0.5) * 1.5,
                 (RANDOM.nextDouble() - 0.5) * 0.04, 0.015 + RANDOM.nextDouble() * 0.015,
                 (RANDOM.nextDouble() - 0.5) * 0.04,
-                SPRAY.random(RANDOM), 1.5F, 3.0F + strength, 0.18F, 50 + RANDOM.nextInt(30)));
+                SPRAY.random(RANDOM), 1.5F, 3.0F + strength, 0.18F, 50 + RANDOM.nextInt(30)), glow);
         }
+    }
+
+    private static void add(CascadeParticle particle, boolean glow) {
+        Minecraft.getInstance().particleEngine.add(glow ? particle.glow() : particle);
     }
 
     private static boolean isFallingWater(BlockState state) {
