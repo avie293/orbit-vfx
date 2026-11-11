@@ -11,3 +11,5 @@
 - Added a placement animation: placed blocks grow out of the surface they are placed on with a small bounce
 - Added a break animation: broken blocks shrink away instead of vanishing instantly
 - Added glowing embers that rise from fire, torches, campfires and lava
+- Added ripples on open water while it rains
+- Added waves and a crown of droplets when something falls into water
