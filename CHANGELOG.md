@@ -14,3 +14,4 @@
 - Added ripples on open water while it rains
 - Added splashes when something falls into water: waves, a crown of drops and a water column on hard landings
 - Added spray, drops and mist at the foot of waterfalls
+- Added glowing plankton: water effects glow blue in warm oceans at night
