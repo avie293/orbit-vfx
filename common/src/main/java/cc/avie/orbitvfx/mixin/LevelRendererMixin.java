@@ -1,12 +1,15 @@
 package cc.avie.orbitvfx.mixin;
 
 import cc.avie.orbitvfx.render.AtmosphereRenderer;
+import cc.avie.orbitvfx.render.BlockAnimations;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.framegraph.FrameGraphBuilder;
 import com.mojang.blaze3d.resource.GraphicsResourceAllocator;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LevelTargetBundle;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import org.joml.Vector4f;
@@ -41,5 +44,11 @@ abstract class LevelRendererMixin {
             CameraRenderState cameraState, GpuBufferSlice terrainFog, Vector4f fogColor, boolean shouldRenderSky,
             boolean consistentDepthRequired, CallbackInfo ci, @Local FrameGraphBuilder frame) {
         AtmosphereRenderer.addPass(frame, this.targets, cameraState, terrainFog, this.levelRenderState);
+    }
+
+    @Inject(method = "submitTransientBlocks", at = @At("TAIL"))
+    private void orbitvfx$submitBlockAnimations(PoseStack poseStack, SubmitNodeCollector submitNodeCollector,
+            LevelRenderState levelRenderState, CallbackInfo ci) {
+        BlockAnimations.submit(poseStack, submitNodeCollector, levelRenderState.cameraRenderState.pos);
     }
 }

@@ -20,11 +20,20 @@ public final class OrbitConfig {
     public static final BooleanOption LIGHT_SCATTERING = Options.toggle("lightScattering", true)
         .dependsOn(GROUND_FOG);
 
+    public static final BooleanOption BREAK_ANIMATION = Options.toggle("breakAnimation", true)
+        .dependsOn(ENABLED);
+    public static final DoubleOption ANIMATION_SPEED = Options.decimal("animationSpeed", 1.0)
+        .slider(0.5, 2.0, 0.1)
+        .format(value -> Component.literal(String.format(Locale.ROOT, "%.1fx", value)))
+        .dependsOn(ENABLED);
+
     // Plain copies of the option values, read by the render code every frame without boxing.
     public static boolean enabled;
     public static boolean groundFog;
     public static float groundFogDensity;
     public static boolean lightScattering;
+    public static boolean breakAnimation;
+    public static float animationSpeed;
 
     private static TabbyConfig config;
 
@@ -38,6 +47,7 @@ public final class OrbitConfig {
             .category("general", category -> category.add(ENABLED))
             .category("atmosphere", category -> category
                 .section("groundFog", section -> section.add(GROUND_FOG, GROUND_FOG_DENSITY, LIGHT_SCATTERING)))
+            .category("animations", category -> category.add(BREAK_ANIMATION, ANIMATION_SPEED))
             .build();
         apply();
     }
@@ -51,5 +61,7 @@ public final class OrbitConfig {
         groundFog = GROUND_FOG.get();
         groundFogDensity = GROUND_FOG_DENSITY.get().floatValue();
         lightScattering = LIGHT_SCATTERING.get();
+        breakAnimation = BREAK_ANIMATION.get();
+        animationSpeed = ANIMATION_SPEED.get().floatValue();
     }
 }
