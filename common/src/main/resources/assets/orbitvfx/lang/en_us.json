@@ -1,3 +1,6 @@
 {
-  "avie.discord": "Discord"
+  "avie.discord": "Discord",
+  "config.orbitvfx.category.general": "General",
+  "config.orbitvfx.enabled": "Enable Orbit",
+  "config.orbitvfx.enabled.tooltip": "Turns all Orbit effects on or off."
 }

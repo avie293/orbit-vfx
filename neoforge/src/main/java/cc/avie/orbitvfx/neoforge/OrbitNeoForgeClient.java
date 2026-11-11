@@ -1,6 +1,7 @@
 package cc.avie.orbitvfx.neoforge;
 
 import cc.avie.orbitvfx.Orbit;
+import cc.avie.orbitvfx.OrbitClient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -12,5 +13,6 @@ import net.neoforged.fml.common.Mod;
 @Mod(value = Orbit.MOD_ID, dist = Dist.CLIENT)
 public final class OrbitNeoForgeClient {
     public OrbitNeoForgeClient(IEventBus modBus, ModContainer container) {
+        OrbitClient.init(container.getModId());
     }
 }
