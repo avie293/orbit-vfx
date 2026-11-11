@@ -23,6 +23,11 @@ public final class OrbitConfig {
     public static final BooleanOption EMBERS = Options.toggle("embers", true)
         .dependsOn(ENABLED);
 
+    public static final BooleanOption RAIN_RIPPLES = Options.toggle("rainRipples", true)
+        .dependsOn(ENABLED);
+    public static final BooleanOption SPLASHES = Options.toggle("splashes", true)
+        .dependsOn(ENABLED);
+
     public static final BooleanOption PLACE_ANIMATION = Options.toggle("placeAnimation", true)
         .dependsOn(ENABLED);
     public static final BooleanOption BREAK_ANIMATION = Options.toggle("breakAnimation", true)
@@ -38,6 +43,8 @@ public final class OrbitConfig {
     public static float groundFogDensity;
     public static boolean lightScattering;
     public static boolean embers;
+    public static boolean rainRipples;
+    public static boolean splashes;
     public static boolean placeAnimation;
     public static boolean breakAnimation;
     public static float animationSpeed;
@@ -55,7 +62,8 @@ public final class OrbitConfig {
             .category("atmosphere", category -> category
                 .section("groundFog", section -> section.add(GROUND_FOG, GROUND_FOG_DENSITY, LIGHT_SCATTERING)))
             .category("effects", category -> category
-                .section("fire", section -> section.add(EMBERS)))
+                .section("fire", section -> section.add(EMBERS))
+                .section("water", section -> section.add(RAIN_RIPPLES, SPLASHES)))
             .category("animations", category -> category.add(PLACE_ANIMATION, BREAK_ANIMATION, ANIMATION_SPEED))
             .build();
         apply();
@@ -71,6 +79,8 @@ public final class OrbitConfig {
         groundFogDensity = GROUND_FOG_DENSITY.get().floatValue();
         lightScattering = LIGHT_SCATTERING.get();
         embers = EMBERS.get();
+        rainRipples = RAIN_RIPPLES.get();
+        splashes = SPLASHES.get();
         placeAnimation = PLACE_ANIMATION.get();
         breakAnimation = BREAK_ANIMATION.get();
         animationSpeed = ANIMATION_SPEED.get().floatValue();

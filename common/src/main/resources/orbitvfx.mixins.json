@@ -7,6 +7,7 @@
   "client": [
     "BlockItemMixin",
     "ClientLevelMixin",
+    "EntityMixin",
     "LevelRendererMixin",
     "RenderSectionRegionMixin"
   ],
