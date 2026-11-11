@@ -51,4 +51,9 @@ abstract class LevelRendererMixin {
             LevelRenderState levelRenderState, CallbackInfo ci) {
         BlockAnimations.submit(poseStack, submitNodeCollector, levelRenderState.cameraRenderState.pos);
     }
+
+    @Inject(method = "removeTransientBlocksInSection", at = @At("HEAD"))
+    private void orbitvfx$onSectionCompiled(long sectionNode, long compileTaskStartTimeNs, CallbackInfo ci) {
+        BlockAnimations.onSectionCompiled(sectionNode, compileTaskStartTimeNs);
+    }
 }

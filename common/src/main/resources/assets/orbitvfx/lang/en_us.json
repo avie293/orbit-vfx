@@ -11,6 +11,8 @@
   "config.orbitvfx.lightScattering": "Light scattering",
   "config.orbitvfx.lightScattering.tooltip": "The mist glows in the color of the sky when looking towards the sun.",
   "config.orbitvfx.category.animations": "Animations",
+  "config.orbitvfx.placeAnimation": "Place animation",
+  "config.orbitvfx.placeAnimation.tooltip": "Placed blocks grow out of the surface they are placed on with a small bounce. Not available with Sodium yet.",
   "config.orbitvfx.breakAnimation": "Break animation",
   "config.orbitvfx.breakAnimation.tooltip": "Broken blocks shrink away instead of vanishing instantly.",
   "config.orbitvfx.animationSpeed": "Animation speed"
